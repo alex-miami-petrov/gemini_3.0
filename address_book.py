@@ -36,6 +36,16 @@ class Email(Field):
 
     def __str__(self):
         return self.email
+    
+class Notes(Field):
+    """Клас для зберігання notes"""
+    def __init__(self, notes):
+        if not isinstance(notes, str): # we are checking if notes is a string
+            raise ValueError("Add something to notes.")
+        self.notes = notes #зберігаємо notes
+
+    def __str__(self):
+        return self.notes
 
 class Birthday(Field):
     """Клас для зберігання дати народження"""
@@ -61,11 +71,12 @@ class Birthday(Field):
 
 class Record:
     """Клас для зберігання інформації про контакт"""
-    def __init__(self, name, birthday=None):
+    def __init__(self, name, birthday=None, notes=None):
         self.name = Name(name)
         self.phones = [] 
         self.emails = []
         self.birthday = birthday if birthday else None
+        self.notes = notes if notes else None
 
     def add_phone(self, phone):
         """Додає номер телефону до запису"""
@@ -132,8 +143,8 @@ class Record:
         phones_str = "; ".join(str(p) for p in self.phones) if self.phones else "No phones"
         emails_str = "; ".join(str(e) for e in self.emails) if self.emails else "No emails"
         birthday_str = str(self.birthday) if self.birthday else "No birthday"
-        
-        return f"Contact name: {self.name}, phones: {phones_str}, emails: {emails_str}, birthday: {birthday_str}"
+        notes_str = str(self.notes) if self.notes else "No notes for this user"
+        return f"Contact name: {self.name}, phones: {phones_str}, emails: {emails_str}, birthday: {birthday_str}, notes: {notes_str}"
 
 class AddressBook(UserDict):
     """Клас для збереження контактів"""
