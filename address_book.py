@@ -2,6 +2,7 @@ from collections import UserDict
 from normalize import normalize_phone
 from datetime import datetime, date
 from birthdays_func import get_upcoming_birthdays
+from all_birthdays_func import all_birthdays
 
 class Field:
     """Базовий клас для полів запису (ім'я, телефон, email)"""
@@ -171,6 +172,10 @@ class AddressBook(UserDict):
     def upcoming_birthdays(self):
         """Повертає список майбутніх днів народження"""
         return get_upcoming_birthdays(self.data.values())
+    
+    def birthdays_pack(self, days: int) -> dict:
+        """Повертає дні народження в заданий період"""
+        return all_birthdays(self.data.values(), days)
     
 # створення нової адресної книги
 # book = AddressBook()

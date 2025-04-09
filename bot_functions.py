@@ -22,7 +22,7 @@ def add_contact(args, book: AddressBook):
 @name_validation
 @phone_validation
 @input_error
-def change_contact(args, book):
+def edit_phone(args, book):
     """Функція для зміни контакту."""
     name, phone = args[0], args[1]
     record = book.find_record(name)
@@ -101,6 +101,14 @@ def birthdays(book):
     return "\n".join([f"For {entry['name']}: congratulation date is {entry['congratulation_date']}" for entry in upcoming_birthdays])
 
 @input_error
+def all_birthdays(book, number_of_days):
+    """Функція для виведення днів народження в заданий період."""
+    birthdays = book.birthdays_pack(days=number_of_days)
+    if not birthdays:
+        return "🎈 Немає днів народження в найближчі дні."
+    return "\n".join([f"{name}: {birthday}" for name, birthday in birthdays.items()])
+
+@input_error
 def add_email(args, book):
     name, email = args[0], args[1]
     record = book.find_record(name)
@@ -144,3 +152,20 @@ def change_email(args, book):
             return f"Error: {e}"  # Покажемо помилку, якщо email не знайдений чи є інша проблема
     else:
         return f"Contact with name {name} not found."
+    
+@input_error
+def find_record(name, book):
+    """Функція для пошуку контакту."""
+    record = book.find_record(name)
+    if record:
+        return str(record)
+    else:
+        return f"Contact with name {name} not found."
+    
+@input_error
+def remove_record(name, book):
+    """Функція для видалення контакту."""
+    record = book.find_record(name)
+    if record:
+        book.remove_record(name)
+        return f"Contact {name} removed."
