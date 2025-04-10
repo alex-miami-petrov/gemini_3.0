@@ -44,12 +44,13 @@ class Notes(Field):
         if not isinstance(notes, str): # we are checking if notes is a string
             raise ValueError("Add something to notes.")
         self.notes = notes #зберігаємо notes
+        self.tag = set(tag) if tag else set()
 
     def add_tag(self, tag):
         self.tags.add(tag.lower()) #adding tags
-
+    
     def __str__(self):
-        return self.notes
+        return "Note: " + self.content + ", Tags: " + str(list(self.tags))
     
 class BookForNotes(UserDict):
 
