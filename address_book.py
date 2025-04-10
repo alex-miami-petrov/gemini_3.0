@@ -2,6 +2,7 @@ from collections import UserDict
 from normalize import normalize_phone
 from datetime import datetime, date
 from birthdays_func import get_upcoming_birthdays
+from all_birthdays_func import all_birthdays
 
 class Field:
     """Базовий клас для полів запису (ім'я, телефон, email)"""
@@ -36,6 +37,38 @@ class Email(Field):
 
     def __str__(self):
         return self.email
+    
+class Notes(Field):
+    """Клас для зберігання notes"""
+    def __init__(self, notes, tag = None):
+        if not isinstance(notes, str): # we are checking if notes is a string
+            raise ValueError("Add something to notes.")
+        self.notes = notes #зберігаємо notes
+        self.tag = set(tag) if tag else set()
+
+    def add_tag(self, tag):
+        self.tags.add(tag.lower()) #adding tags
+    
+    def __str__(self):
+        return "Note: " + self.content + ", Tags: " + str(list(self.tags))
+    
+class BookForNotes(UserDict):
+
+    def add_note(self, notes):
+        self.data[id(notes)] = notes
+
+    def delete_note(self, note_id):
+            if note_id in self.data:
+                self.data.pop(note_id, None)
+                return True
+            return False
+
+    def edit_note(self, note_id, new_note):
+        note = self.data.get(note_id)
+        if note:
+            note.content = new_note
+            return True
+        return False
 
 class Birthday(Field):
     """Клас для зберігання дати народження"""
@@ -61,11 +94,12 @@ class Birthday(Field):
 
 class Record:
     """Клас для зберігання інформації про контакт"""
-    def __init__(self, name, birthday=None):
+    def __init__(self, name, birthday=None, notes=None):
         self.name = Name(name)
         self.phones = [] 
         self.emails = []
         self.birthday = birthday if birthday else None
+        self.notes = notes if notes else None
 
     def add_phone(self, phone):
         """Додає номер телефону до запису"""
@@ -132,8 +166,8 @@ class Record:
         phones_str = "; ".join(str(p) for p in self.phones) if self.phones else "No phones"
         emails_str = "; ".join(str(e) for e in self.emails) if self.emails else "No emails"
         birthday_str = str(self.birthday) if self.birthday else "No birthday"
-        
-        return f"Contact name: {self.name}, phones: {phones_str}, emails: {emails_str}, birthday: {birthday_str}"
+        notes_str = str(self.notes) if self.notes else "No notes for this user"
+        return f"Contact name: {self.name}, phones: {phones_str}, emails: {emails_str}, birthday: {birthday_str}, notes: {notes_str}"
 
 class AddressBook(UserDict):
     """Клас для збереження контактів"""
@@ -160,6 +194,10 @@ class AddressBook(UserDict):
     def upcoming_birthdays(self):
         """Повертає список майбутніх днів народження"""
         return get_upcoming_birthdays(self.data.values())
+    
+    def birthdays_pack(self, days: int) -> dict:
+        """Повертає дні народження в заданий період"""
+        return all_birthdays(self.data.values(), days)
     
 # створення нової адресної книги
 # book = AddressBook()
