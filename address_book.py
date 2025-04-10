@@ -3,6 +3,7 @@ from normalize import normalize_phone
 from datetime import datetime, date
 from birthdays_func import get_upcoming_birthdays
 from all_birthdays_func import all_birthdays
+from uuid import uuid4
 
 class Field:
     """Базовий клас для полів запису (ім'я, телефон, email)"""
@@ -43,33 +44,67 @@ class Notes(Field):
     def __init__(self, notes, tag = None):
         if not isinstance(notes, str): # we are checking if notes is a string
             raise ValueError("Add something to notes.")
+        self.id = str(uuid4()) #генеруємо унікальний id для нотатки
         self.notes = notes #зберігаємо notes
         self.tag = set(tag) if tag else set()
 
     def add_tag(self, tag):
-        self.tags.add(tag.lower()) #adding tags
+        if not isinstance(tag, str): 
+            raise ValueError("Tag must be a string.")
+        self.tag.add(tag.lower())  # adding tags
+
+    def remove_tag(self, tag):
+        if tag in self.tag:
+            self.tag.remove(tag.lower())
+
+    def show_tags(self):
+        if not self.tag:
+            return "No tags"
+        return ", ".join(tag for tag in self.tag)
     
     def __str__(self):
-        return "Note: " + self.content + ", Tags: " + str(list(self.tags))
+        tags_str = ", ".join(self.tag) if self.tag else "No tags"
+        return f"Note: {self.notes}, Tags: {tags_str}"
     
 class BookForNotes(UserDict):
+    """Клас для зберігання нотаток"""
+    def __init__(self):
+        super().__init__()
+        self.data = {}  #ініціалізуємо словник для зберігання нотаток
 
     def add_note(self, notes):
-        self.data[id(notes)] = notes
+        self.data[notes.id] = notes  #додаємо нотатку до словника
 
     def delete_note(self, note_id):
-            if note_id in self.data:
-                self.data.pop(note_id, None)
-                return True
-            return False
-
-    def edit_note(self, note_id, new_note):
-        note = self.data.get(note_id)
-        if note:
-            note.content = new_note
+        if note_id in self.data:
+            del self.data[note_id]  #видаляємо нотатку за її id
             return True
         return False
+    
+    def find_note(self, note_id):
+        return self.data.get(note_id, None)
 
+    def edit_note(self, note_id, new_note_text):
+        """Редагує нотатку по її вмісту."""
+        note = self.find_note(note_id)
+        if note:
+            note.notes = new_note_text  #оновлюємо текст нотатки
+            return True
+        return False
+    
+    def show_notes(self):
+        """Повертає всі нотатки у форматі рядка"""
+        if not self.data:
+            return "No notes available."
+        return "; ".join(str(note) for note in self.data.values())
+    
+    def __str__(self):
+        return self.show_notes()
+
+def __str__(self):
+        if not self.data:
+            return "No notes"
+        return "; ".join(f"[{note.content}]" for note in self.data.values())
 class Birthday(Field):
     """Клас для зберігання дати народження"""
     def __init__(self, birthday):
@@ -99,7 +134,7 @@ class Record:
         self.phones = [] 
         self.emails = []
         self.birthday = birthday if birthday else None
-        self.notes = notes if notes else None
+        self.notes = notes if isinstance(notes, BookForNotes) else BookForNotes() #ініціалізуємо нотатки, якщо вони є
 
     def add_phone(self, phone):
         """Додає номер телефону до запису"""
@@ -166,7 +201,11 @@ class Record:
         phones_str = "; ".join(str(p) for p in self.phones) if self.phones else "No phones"
         emails_str = "; ".join(str(e) for e in self.emails) if self.emails else "No emails"
         birthday_str = str(self.birthday) if self.birthday else "No birthday"
-        notes_str = str(self.notes) if self.notes else "No notes for this user"
+        if self.notes and self.notes.data:
+            notes_list = [str(note) for note in self.notes.data.values()]
+            notes_str = "\n    - " + "\n    - ".join(notes_list)
+        else:
+            notes_str = "No notes for this user"
         return f"Contact name: {self.name}, phones: {phones_str}, emails: {emails_str}, birthday: {birthday_str}, notes: {notes_str}"
 
 class AddressBook(UserDict):
@@ -185,7 +224,10 @@ class AddressBook(UserDict):
 
     def find_record(self, name):
         """Знаходить запис за ім'ям"""
-        return self.data.get(name, None) #повертаємо запис за ім'ям
+        for record_name, record in self.data.items():
+            if record_name.lower() == name.lower():  # Порівняння з ігноруванням регістру
+                return record
+        return None
 
     def __str__(self):
         """Повертає рядкове представлення адресної книги"""

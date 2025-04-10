@@ -1,4 +1,4 @@
-from bot_functions import add_contact, edit_phone, show_phone, show_all, add_birthday, show_birthday, birthdays, all_birthdays, add_email, show_email, change_email, find_record, remove_record
+from bot_functions import *
 from parse import parse_input
 from address_book import AddressBook  #додали імпорт класу AddressBook
 from validation_functions.validation import name_validation, phone_validation, input_error
@@ -11,7 +11,7 @@ def main():
     
     print("Welcome to the assistant bot!")
     print("You can use the following commands:")
-    print("add, change, phone, all, add-birthday, show-birthday, birthdays, add-email, show-email, change-email, hello, close, exit.")
+    print("add, change-phone, show-phons, all,\nadd-birthday, show-birthday, birthdays, all-birthdays, add-email, show-email, change-email,\nadd-note, show-note, change-note, remove-note, hello, close, exit.")
 
     while True:
         user_input = input("Enter a command: ").strip()
@@ -22,11 +22,16 @@ def main():
         try:
             command, *args = parse_input(user_input)
         except ValueError:
-            print("Invalid command. Available commands: add, change, phone, all, add-birthday, show-birthday, birthdays, add-email, show-email, change-email, hello, close, exit.")
+            print("Invalid command. Available commands: add, change-phone, show-phons, all, add-birthday, show-birthday, birthdays, all-birthdays, add-email, show-email, change-email, add-note, show-note, change-note, remove-note, hello, close, exit.")
             continue
 
+        save_commands = [
+        "add", "change-phone", "show-contact", "remove", 
+        "add-birthday", "add-email", "change-email", 
+        "add-note", "change-note", "remove-note"
+    ]
+
         if command in ["close", "exit"]:
-            save_data(book) #зберігаємо дані перед виходом
             print("Good bye!")
             break
         elif command == "hello":
@@ -35,12 +40,14 @@ def main():
             if len(args) < 2:
                 print("Error: Please provide both name and phone number.")
             else:
-                print(add_contact(args, book))  #передаємо book замість contacts
+                name = args[0]
+                phone = args[1]
+                print(add_contact(name, phone, book)) #передаємо book замість contacts
         elif command == "change-phone":
             if len(args) < 2:
                 print("Error: Please provide both name and phone number.")
             else:
-                print(edit_phone(args, book))  #передаємо book замість contacts
+                print(change_phone(args, book))  #передаємо book замість contacts
         elif command == "show-contact":
             if not args:
                 print("Error: Please provide a name to find the contact.")
@@ -51,7 +58,7 @@ def main():
                 print("Error: Please provide a name to remove the contact.")
             else:
                 print(remove_record(args[0], book))
-        elif command == "phone":
+        elif command == "show-phons":
             if not args:
                 print("Error: Please provide a name to find the phone number.")
             else:
@@ -100,7 +107,37 @@ def main():
                 print("Error: Please provide both name and email.")
             else:
                 print(change_email(args, book))
+        elif command == "add-note":
+            if len(args) < 2:
+                print("Error: Please provide both name and note.")
+            else:
+                print(add_note(args, book))
+                response = input("Do you want to add some tags? y/n ").strip().lower()
+                if response == "y":
+                    tags = input("Enter tags separated by commas: ").strip().split(",")
+                    for tag in tags:
+                        add_tag(args[0], tag.strip(), book)
+                print("Tag added.")
+        elif command == "show-note":
+            if not args:
+                print("Error: Please provide a name to find the note.")
+            else:
+                print(show_note(args[0], book))
+        elif command == "change-note":
+            if len(args) < 3:
+                print("Error: Please provide name, old note and new note.")
+            else:
+                print(edit_note(args, book))
+        elif command == "remove-note":
+            if len(args) < 2:
+                print("Error: Please provide both name and note.")
+            else:
+                print(remove_note(args[0], args[1], book))
         else:
             print("Invalid command. Available commands: add, change, phone, all, add-birthday, show_birthday, birthdays, hello, close, exit.")
+
+        if command in save_commands:
+            save_data(book)
+
 if __name__ == "__main__":
     main()
