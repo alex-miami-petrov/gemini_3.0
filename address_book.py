@@ -39,18 +39,36 @@ class Email(Field):
         return self.email
     
 class Notes(Field):
-    """Клас для зберігання notes"""
-    def __init__(self, notes, tag = None):
-        if not isinstance(notes, str): # we are checking if notes is a string
-            raise ValueError("Add something to notes.")
-        self.notes = notes #зберігаємо notes
-        self.tag = set(tag) if tag else set()
+    """Calss to save notes"""
+    def __init__(self, title=None, text=None, tags=None):
+        self.title = title if title else ""
+        self.text = text if text else ""
+        self.tags = set()
+        if tags:
+            for tag in tags:
+                self.tags.add(tag.lower())
 
     def add_tag(self, tag):
         self.tags.add(tag.lower()) #adding tags
     
+    def remove_tag(self, tag):
+        self.tags.discard(tag.lower()) #delete
+
+    def change_tag(self, old_tag, new_tag):
+        old, new = old_tag.lower(), new_tag.lower()
+        if old in self.tags:
+            self.tags.remove(old)
+            self.tags.add(new) #change 
+    
     def __str__(self):
-        return "Note: " + self.content + ", Tags: " + str(list(self.tags))
+        parts = []
+        if self.title:
+            parts.append("Title: " + self.title)
+        if self.text:
+            parts.append("Text: " + self.text)
+        if self.tags:
+            parts.append("Tags: " + ", ".join(sorted(self.tags)))
+        return " | ".join(parts) if parts else "Empty Note"
     
 class BookForNotes(UserDict):
 
@@ -63,13 +81,16 @@ class BookForNotes(UserDict):
                 return True
             return False
 
-    def edit_note(self, note_id, new_note):
+    def edit_note(self, note_id, new_title=None, new_text=None):
         note = self.data.get(note_id)
         if note:
-            note.content = new_note
+            if new_title:
+                note.title = new_title
+            if new_text:
+                note.text = new_text
             return True
         return False
-
+    
 class Birthday(Field):
     """Клас для зберігання дати народження"""
     def __init__(self, birthday):
