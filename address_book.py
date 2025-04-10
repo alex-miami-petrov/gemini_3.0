@@ -40,13 +40,34 @@ class Email(Field):
     
 class Notes(Field):
     """Клас для зберігання notes"""
-    def __init__(self, notes):
+    def __init__(self, notes, tag = None):
         if not isinstance(notes, str): # we are checking if notes is a string
             raise ValueError("Add something to notes.")
         self.notes = notes #зберігаємо notes
 
+    def add_tag(self, tag):
+        self.tags.add(tag.lower()) #adding tags
+
     def __str__(self):
         return self.notes
+    
+class BookForNotes(UserDict):
+
+    def add_note(self, notes):
+        self.data[id(notes)] = notes
+
+    def delete_note(self, note_id):
+            if note_id in self.data:
+                self.data.pop(note_id, None)
+                return True
+            return False
+
+    def edit_note(self, note_id, new_note):
+        note = self.data.get(note_id)
+        if note:
+            note.content = new_note
+            return True
+        return False
 
 class Birthday(Field):
     """Клас для зберігання дати народження"""
