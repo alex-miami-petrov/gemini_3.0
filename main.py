@@ -3,18 +3,25 @@ from parse import parse_input
 from address_book import AddressBook  #додали імпорт класу AddressBook
 from validation_functions.validation import name_validation, phone_validation, input_error
 from file_func import save_data, load_data  #додали імпорт функцій для роботи з файлами
+from rich_func import show_commands  #додали імпорт функції для роботи з rich
 
 def main():
     book = load_data()
     if not book:
         book = AddressBook() #якщо адресна книга пуста, створюємо нову
     
-    print("Welcome to the assistant bot!")
-    print("You can use the following commands:")
-    print("add, change-phone, show-phons, all,\nadd-birthday, show-birthday, birthdays, all-birthdays, add-email, show-email, change-email,\nadd-note, show-note, change-note, remove-note, hello, close, exit.")
+
+    show_commands() #виводимо команди за допомогою rich
+
+    # print("Welcome to the assistant bot!")
+    # print("You can use the following commands:")
+    # print("add, change-phone, show-phons, all,\nadd-birthday, show-birthday, birthdays, all-birthdays, add-email, show-email, change-email,\nadd-note, show-note, change-note, remove-note, hello, close, exit.")
 
     while True:
         user_input = input("Enter a command: ").strip()
+        # KeyboardInterrupt = "close" or "exit"
+        # if user_input == er:
+        #     break
         if not user_input:
             print("Error: Please enter a command.")
             continue
@@ -26,9 +33,9 @@ def main():
             continue
 
         save_commands = [
-        "add", "change-phone", "show-contact", "remove", 
+        "add", "change-phone", "remove", 
         "add-birthday", "add-email", "change-email", 
-        "add-note", "change-note", "remove-note"
+        "add-note", "change-note", "remove-note", "add-address", "change-address"
     ]
 
         if command in ["close", "exit"]:
@@ -58,13 +65,29 @@ def main():
                 print("Error: Please provide a name to remove the contact.")
             else:
                 print(remove_record(args[0], book))
-        elif command == "show-phons":
+        elif command == "show-phones":
             if not args:
                 print("Error: Please provide a name to find the phone number.")
             else:
                 print(show_phone(args[0], book))  #передаємо book замість contacts
         elif command == "all":
             print(show_all(book))  #передаємо book замість contacts
+        elif command == "add-address":
+            if len(args) < 4:  #перевірка, чи є всі необхідні параметри (ім'я та адреса)
+                print("Error: Please provide both name and full address (city, street, house).")
+            else:
+                print(add_address(args, book))  #передаємо book замість contacts
+        elif command == "show-address":
+            if not args:  # Якщо немає аргументів (ім'я не вказано)
+                print("Error: Please provide a name to find the address.")
+            else:
+                print(show_address(args[0], book))
+
+        elif command == "change-address":
+            if len(args) < 4:  # Перевірка на достатню кількість аргументів для зміни адреси
+                print("Error: Please provide name, city, street, and house.")
+            else:
+                print(change_address(args, book))  #передаємо book замість contacts
         elif command == "add-birthday":
             if len(args) < 2:
                 print("Error: Please provide both name and birthday.")
@@ -108,8 +131,8 @@ def main():
             else:
                 print(change_email(args, book))
         elif command == "add-note":
-            if len(args) < 2:
-                print("Error: Please provide both name and note.")
+            if len(args) < 3:
+                print("Usage: add-note <Contact Name> <Title> <Note Text>")
             else:
                 print(add_note(args, book))
                 response = input("Do you want to add some tags? y/n ").strip().lower()
@@ -117,7 +140,9 @@ def main():
                     tags = input("Enter tags separated by commas: ").strip().split(",")
                     for tag in tags:
                         add_tag(args[0], tag.strip(), book)
-                print("Tag added.")
+                    print("Tags added.")
+                else:
+                    print("No tags added.")
         elif command == "show-note":
             if not args:
                 print("Error: Please provide a name to find the note.")
@@ -125,12 +150,12 @@ def main():
                 print(show_note(args[0], book))
         elif command == "change-note":
             if len(args) < 3:
-                print("Error: Please provide name, old note and new note.")
+                print("Error: Please provide name, title and new note.")
             else:
                 print(edit_note(args, book))
         elif command == "remove-note":
             if len(args) < 2:
-                print("Error: Please provide both name and note.")
+                print("Error: Please provide both name and title of note.")
             else:
                 print(remove_note(args[0], args[1], book))
         else:

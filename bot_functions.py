@@ -235,66 +235,77 @@ def show_note(name, book):
 @input_error
 def add_note(args, book):
     """Функція для додавання нотатки."""
-    name, note_text = args[0], " ".join(args[1:])
+    if len(args) < 3:
+        return "Usage: add-note <Contact Name> <Title> <Note Text>"
+
+    name = args[0]
+    title = args[1]
+    note_text = " ".join(args[2:])
+
     record = book.find_record(name)
     
     if not record:
-        return f"Contact with name {name} not found."
+        return f"Contact with name '{name}' not found."
 
     try:
-        #перевірка чи notes — правильного типу
         if not isinstance(record.notes, BookForNotes):
             record.notes = BookForNotes()
 
-        #створення об'єкта Notes
-        note = Notes(note_text)
-
-        #додавання нотатки
+        # Створення нотатки з title і text
+        note = Notes(title, note_text)
         record.notes.add_note(note)
 
-        return f"Note for {name} added: {note_text}."
+        return f"Note added to {name}:\n{note}"
     except ValueError as e:
         return str(e)
     
 @input_error
-def remove_note(name, note_text, book):
-    """Функція для видалення нотатки."""
+def remove_note(name, title, book):
+    """Функція для видалення нотатки за заголовком."""
     
-    record = book.find_record(name)  # Знаходимо контакт за ім'ям
+    record = book.find_record(name)  #знаходимо контакт за ім'ям
     
     if record:
-        # Перевіряємо всі нотатки
+        #перевіряємо всі нотатки
         deleted = False
         for note_id, note in record.notes.data.items():
-            if note_text in note.notes:  # Якщо текст нотатки містить зазначений текст
-                if record.notes.delete_note(note_id):  # Видаляємо цю нотатку за її id
+            if note.title == title:  #якщо заголовок нотатки збігається з зазначеним
+                #видаляємо нотатку за її id
+                if record.notes.delete_note(note_id):  
                     deleted = True
                     break
         
         if deleted:
-            return f"Note for {name} removed."
+            return f"Note with title '{title}' for {name} removed."
         else:
-            return f"Error: No note found matching '{note_text}' for {name}."
+            return f"Error: No note found with title '{title}' for {name}."
     else:
-        return f"Contact with name {name} not found."
+        return f"Contact with name '{name}' not found."
+
  
 @input_error
 def edit_note(args, book):
-    """Функція для редагування нотатки."""
-    name, old_note, new_note = args[0], args[1], args[2]
+    """Функція для редагування тексту нотатки за її заголовком."""
+    if len(args) < 3:
+        return "Usage: change-note <Contact Name> <Title> <New Note Text>"
+
+    name, title = args[0], args[1]  # беремо ім'я користувача та заголовок нотатки
+    new_note_text = " ".join(args[2:])  # збираємо новий текст нотатки
+
+    # Знаходимо користувача по імені
     record = book.find_record(name)
-    
-    if record:
-        try:
-            #редагуємо нотатку в записі
-            if record.notes.edit_note(old_note, new_note):  #перевіряємо, чи нотатка знайдена і змінена
-                return f"Note for {name} changed from '{old_note}' to '{new_note}'."
-            else:
-                return f"Error: No note found matching '{old_note}' for {name}."
-        except ValueError as e:
-            return str(e)
+    if not record:
+        return f"Contact with name '{name}' not found."
+
+    # Перевіряємо, чи є у користувача нотатки
+    if not isinstance(record.notes, BookForNotes):
+        return f"{name} has no notes to edit."
+
+    # Викликаємо метод редагування нотатки за її заголовком
+    if record.notes.edit_note(title, new_note_text):
+        return f"Note with title '{title}' for {name} updated successfully."
     else:
-        return f"Contact with name {name} not found."
+        return f"No note found with title '{title}' for {name}."
     
 
 @input_error
@@ -320,3 +331,67 @@ def add_tag(name, tag, book):
         return f"Tag '{tag}' added to note: {last_note.notes}"
     except Exception as e:
         return f"Failed to add tag: {e}"
+    
+
+########################### ADDRESS ##################################
+
+# @input_error
+# def add_address(command: str, book: AddressBook):
+#     parts = command.strip().split(" ", 4)
+    
+#     #перевірка на правильну кількість частин в команді
+#     if len(parts) == 5:
+#         _, name, city, street, house = parts  #розпаковка частин команди
+#         record = book.find_record(name)  #шукаємо контакт в книзі
+        
+#         #якщо контакт знайдений, додаємо адресу
+#         if record:
+#             record.add_address()
+#             print(f"Address for {name} has been added: {city}, {street}, {house}")
+#         else:
+#             print(f"No contact found with name {name}.")  #якщо контакт не знайдений
+#     else:
+#         print("Invalid command. Usage: add_address <name> <city> <street> <house>")
+
+
+@input_error
+def add_address(args, book) -> str:
+    """Функція для додавання адреси."""
+    if len(args) < 4:
+        return "Error: Not enough arguments for adding address. Format: add-address <name> <city> <street> <house>"
+
+    name, city, street, house = args[0], args[1], args[2], args[3]
+    record = book.find_record(name)  #шукаємо контакт в книзі
+
+    record = book.find_record(name)
+    if not record:
+        return f"Contact '{name}' not found."
+    
+    record.add_address(city, street, house)
+    return f"Address for '{name}' added successfully."                                    
+
+@input_error
+def show_address(name: str, book: AddressBook) -> str:
+    record = book.find_record(name)  # шукаємо контакт в книзі
+    if record:
+        if record.address:
+            return f"Address for {name}: {record.address}"
+        else:
+            return f"No address found for {name}."
+    else:
+        return f"No contact found with name {name}."
+
+@input_error   
+def change_address(args, book: AddressBook) -> str:
+    if len(args) < 5:
+        return "Error: Please provide name, city, street, and house."
+    
+    name, city, street, house = args[0], args[1], args[2], args[3]
+    record = book.find_record(name)  #шукаємо контакт в книзі
+    
+    #якщо контакт знайдений, змінюємо адресу
+    if record:
+        record.change_address(city, street, house)
+        return f"Address for {name} changed to: {city}, {street}, {house}"
+    else:
+        return f"No contact found with name {name}."
