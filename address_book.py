@@ -40,6 +40,7 @@ class Email(Field):
         return self.email
     
 class Notes(Field):
+
     """Клас для зберігання notes"""
     def __init__(self, notes, tag = None):
         if not isinstance(notes, str): # we are checking if notes is a string
@@ -47,6 +48,7 @@ class Notes(Field):
         self.id = str(uuid4()) #генеруємо унікальний id для нотатки
         self.notes = notes #зберігаємо notes
         self.tag = set(tag) if tag else set()
+
 
     def add_tag(self, tag):
         if not isinstance(tag, str): 
@@ -62,10 +64,20 @@ class Notes(Field):
             return "No tags"
         return ", ".join(tag for tag in self.tag)
     
+    def remove_tag(self, tag):
+        self.tags.discard(tag.lower()) #delete
+
+    def change_tag(self, old_tag, new_tag):
+        old, new = old_tag.lower(), new_tag.lower()
+        if old in self.tags:
+            self.tags.remove(old)
+            self.tags.add(new) #change 
+    
     def __str__(self):
         tags_str = ", ".join(self.tag) if self.tag else "No tags"
         return f"Note: {self.notes}, Tags: {tags_str}"
-    
+
+   
 class BookForNotes(UserDict):
     """Клас для зберігання нотаток"""
     def __init__(self):
@@ -83,6 +95,7 @@ class BookForNotes(UserDict):
     
     def find_note(self, note_id):
         return self.data.get(note_id, None)
+
 
     def edit_note(self, note_id, new_note_text):
         """Редагує нотатку по її вмісту."""
@@ -105,6 +118,7 @@ def __str__(self):
         if not self.data:
             return "No notes"
         return "; ".join(f"[{note.content}]" for note in self.data.values())
+
 class Birthday(Field):
     """Клас для зберігання дати народження"""
     def __init__(self, birthday):
