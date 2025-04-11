@@ -1,4 +1,4 @@
-import re  # Додаємо для перевірки регулярних виразів
+import re
 
 def validate_name(name):
     """Перевіряє, чи ім'я містить лише літери та пробіли."""
@@ -11,38 +11,38 @@ def validate_phone(phone):
 def name_validation(func):
     """Декоратор для перевірки імені."""
     def wrapper(*args, **kwargs):
-        if not args or not isinstance(args[0], list) or len(args[0]) == 0:
-            return "Error: No name provided."
-        name = args[0][0]  # беремо перший елемент зі списку аргументів
-        if not validate_name(name):
-            return "Error: Invalid name. Name must contain only letters and spaces."
+        # Отримуємо ім'я з args
+        name = args[0] if args else kwargs.get('name')
+        
+        # Перевірка чи name є рядком
+        if not isinstance(name, str):
+            return "Error: Name must be a string."
+        
         return func(*args, **kwargs)
     return wrapper
 
 def phone_validation(func):
     """Декоратор для перевірки телефону."""
-    def wrapper(*args, **kwargs):
-        if not args or not isinstance(args[0], list) or len(args[0]) < 2:
+    def wrapper(name, phone, *args, **kwargs):
+        if not phone:
             return "Error: No phone number provided."
-        phone = args[0][1]  # беремо другий елемент зі списку аргументів
         if not validate_phone(phone):
             return "Error: Invalid phone number. It must be a number with 10 to 15 digits."
-        return func(*args, **kwargs)
+        return func(name, phone, *args, **kwargs)
     return wrapper
 
 def input_error(func):
-    """Декоратор для обробки помилок введення користувача та перевірки даних."""
+    """Декоратор для обробки помилок вводу."""
     def inner(*args, **kwargs):
         try:
-            # перевірка валідності даних в залежності від функції
             if func.__name__ in ['add_contact', 'change_contact']:
-                name, phone = args[0]  # отримуємо ім'я та телефон
+                name, phone = args[0], args[1]
                 if not validate_name(name):
                     return "Error: Invalid name. Name must contain only letters and spaces."
                 if not validate_phone(phone):
                     return "Error: Invalid phone number. It must be a number with 10 to 15 digits."
             result = func(*args, **kwargs)
-            if result is None:  # додаємо перевірку на None
+            if result is None:
                 return "Error: Something went wrong, no data returned."
             return result
         except Exception as e:

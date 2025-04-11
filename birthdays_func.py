@@ -1,11 +1,14 @@
 from datetime import datetime, timedelta
 
-def get_upcoming_birthdays(users) -> dict:
+def get_upcoming_birthdays(users) -> list:
     current_date = datetime.today().date()  # поточна дата
     next_week = current_date + timedelta(days=7)  # дата через 7 днів
     upcoming_birthdays = []  # список для майбутніх днів народження
     
     for user in users:  # працюємо з об'єктами класу Record
+        if not user.birthday:  # Перевірка на наявність дати народження
+            continue  # Якщо дати немає, пропускаємо цей запис
+        
         birthday_date = user.birthday.date.replace(year=current_date.year)  # переведення на поточний рік
         # якщо день народження вже був у цьому році, переносимо на наступний
         if birthday_date < current_date:

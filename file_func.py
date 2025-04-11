@@ -8,6 +8,18 @@ def save_data(book, filename="addressbook.pkl"):
 def load_data(filename="addressbook.pkl"):
     try:
         with open(filename, "rb") as f:
-            return pickle.load(f)
+            book = pickle.load(f)
+
+            # Перевірка і перетворення байтів у рядки для кожного контакту
+            for name, record in book.data.items():  # Тут використовуємо book.data, оскільки self.data містить записи
+                if isinstance(record.name, bytes):
+                    record.name = record.name.decode('utf-8')  # Перетворення на рядок
+
+                # Перевіряємо телефони і перетворюємо, якщо вони у байтовому форматі
+                for i, phone in enumerate(record.phones):
+                    if isinstance(phone, bytes):
+                        record.phones[i] = phone.decode('utf-8')  # Перетворення на рядок
+
+            return book
     except FileNotFoundError:
-        return AddressBook()  #повернення нової адресної книги, якщо файл не знайдено
+        return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
