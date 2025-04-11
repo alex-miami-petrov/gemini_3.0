@@ -9,42 +9,57 @@ def validate_phone(phone):
     return bool(re.fullmatch(r"\d{10,15}", phone))
 
 def name_validation(func):
-    """Декоратор для перевірки імені."""
-    def wrapper(*args, **kwargs):
-        # Отримуємо ім'я з args
-        name = args[0] if args else kwargs.get('name')
-        
-        # Перевірка чи name є рядком
+    def wrapper(args, book, *other, **kwargs):
+        if not isinstance(args, list) or len(args) < 1:
+            return "Error: Name is missing."
+
+        name = args[0]
+
         if not isinstance(name, str):
             return "Error: Name must be a string."
-        
-        return func(*args, **kwargs)
+
+        if not validate_name(name):
+            return "Error: Invalid name. Only letters and spaces allowed."
+
+        return func(args, book, *other, **kwargs)
     return wrapper
 
 def phone_validation(func):
-    """Декоратор для перевірки телефону."""
-    def wrapper(name, phone, *args, **kwargs):
-        if not phone:
-            return "Error: No phone number provided."
+    def wrapper(args, book, *other, **kwargs):
+        if not isinstance(args, list) or len(args) < 2:
+            return "Error: Phone number is missing."
+
+        phone = args[1]
+
+        if not isinstance(phone, str):
+            return "Error: Phone must be a string."
+
         if not validate_phone(phone):
             return "Error: Invalid phone number. It must be a number with 10 to 15 digits."
-        return func(name, phone, *args, **kwargs)
+
+        return func(args, book, *other, **kwargs)
     return wrapper
 
 def input_error(func):
     """Декоратор для обробки помилок вводу."""
     def inner(*args, **kwargs):
         try:
+            #перевірка для окремих функцій, наприклад, додавання контакту
             if func.__name__ in ['add_contact', 'change_contact']:
                 name, phone = args[0], args[1]
                 if not validate_name(name):
                     return "Error: Invalid name. Name must contain only letters and spaces."
                 if not validate_phone(phone):
                     return "Error: Invalid phone number. It must be a number with 10 to 15 digits."
+                
             result = func(*args, **kwargs)
             if result is None:
                 return "Error: Something went wrong, no data returned."
             return result
+        except AttributeError as e:
+            #спеціальна обробка для помилки, коли атрибут відсутній
+            return f"AttributeError: {str(e)}. It seems that the 'address' attribute is missing in the Record object."
         except Exception as e:
+            #загальна обробка всіх інших помилок
             return f"Unexpected error: {str(e)}"
     return inner
