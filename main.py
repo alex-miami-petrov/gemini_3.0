@@ -1,21 +1,26 @@
 from bot_functions import *
 from parse import parse_input
-from address_book import AddressBook  
+from address_book import AddressBook
 from validation_functions.validation import name_validation, phone_validation, input_error
-from file_func import save_data, load_data 
-from rich_func import show_commands  
+from file_func import save_data, load_data
+from rich_func import show_commands
+from guess_command import get_completer
+
+from prompt_toolkit import prompt
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 def main():
     book = load_data()
     if not book:
-        book = AddressBook() 
-    
+        book = AddressBook()
 
-    show_commands() 
+    show_commands()
 
+    completer_obj = get_completer()
 
     while True:
-        user_input = input("Enter a command: ").strip()
+        user_input = prompt("Enter a command: ", completer=completer_obj, auto_suggest=AutoSuggestFromHistory()).strip()
+
         if not user_input:
             print("Error: Please enter a command.")
             continue
@@ -23,14 +28,14 @@ def main():
         try:
             command, *args = parse_input(user_input)
         except ValueError:
-            print("Invalid command. Available commands: add, change-phone, show-phons, all, add-birthday, show-birthday, birthdays, all-birthdays, add-email, show-email, change-email, add-note, show-note, change-note, remove-note, hello, close, exit.")
+            print("Invalid command. Available commands: add, change-phone, show-phones, all, add-birthday, show-birthday, birthdays, all-birthdays, add-email, show-email, change-email, add-note, show-note, change-note, remove-note, hello, close, exit.")
             continue
 
         save_commands = [
-        "add", "change-phone", "remove", 
-        "add-birthday", "add-email", "change-email", 
-        "add-note", "change-note", "remove-note", "add-address", "change-address"
-    ]
+            "add", "change-phone", "remove",
+            "add-birthday", "add-email", "change-email",
+            "add-note", "change-note", "remove-note", "add-address", "change-address"
+        ]
 
         if command in ["close", "exit"]:
             print("Good bye!")
@@ -41,14 +46,12 @@ def main():
             if len(args) < 2:
                 print("Error: Please provide both name and phone number.")
             else:
-                name = args[0]
-                phone = args[1]
-                print(add_contact(name, phone, book)) 
+                print(add_contact(args, book))
         elif command == "change-phone":
             if len(args) < 2:
                 print("Error: Please provide both name and phone number.")
             else:
-                print(change_phone(args, book))  
+                print(change_phone(args, book))
         elif command == "show-contact":
             if not args:
                 print("Error: Please provide a name to find the contact.")
@@ -63,44 +66,43 @@ def main():
             if not args:
                 print("Error: Please provide a name to find the phone number.")
             else:
-                print(show_phone(args[0], book))  
+                print(show_phone(args[0], book))
         elif command == "all":
-            print(show_all(book))  
+            print(show_all(book))
         elif command == "add-address":
-            if len(args) < 4:  
+            if len(args) < 4:
                 print("Error: Please provide both name and full address (city, street, house).")
             else:
-                print(add_address(args, book))  
+                print(add_address(args, book))
         elif command == "show-address":
-            if not args:  
+            if not args:
                 print("Error: Please provide a name to find the address.")
             else:
                 print(show_address(args[0], book))
-
         elif command == "change-address":
-            if len(args) < 4:  
+            if len(args) < 4:
                 print("Error: Please provide name, city, street, and house.")
             else:
-                print(change_address(args, book))  
+                print(change_address(args, book))
         elif command == "add-birthday":
             if len(args) < 2:
                 print("Error: Please provide both name and birthday.")
             else:
-                print(add_birthday(args, book)) 
+                print(add_birthday(args, book))
         elif command == "show-birthday":
             if not args:
                 print("Error: Please provide a name to find the birthday.")
             else:
-                print(show_birthday(args[0], book)) 
+                print(show_birthday(args[0], book))
         elif command == "birthdays":
-            print(birthdays(book)) 
+            print(birthdays(book))
         elif command == "all-birthdays":
             if len(args) < 1:
                 print("Error: Please provide the number of days.")
             else:
                 try:
                     number_of_days = int(args[0])
-                    result = book.birthdays_pack(number_of_days)  
+                    result = book.birthdays_pack(number_of_days)
                     if not result:
                         print("No birthdays found.")
                     else:
@@ -153,11 +155,10 @@ def main():
             else:
                 print(remove_note(args[0], args[1], book))
         else:
-            print("Invalid command. Available commands: add, change, phone, all, add-birthday, show_birthday, birthdays, hello, close, exit.")
+            print("Invalid command. Available commands: add, change, phone, all, add-birthday, show-birthday, birthdays, hello, close, exit.")
 
         if command in save_commands:
             save_data(book)
 
 if __name__ == "__main__":
     main()
-

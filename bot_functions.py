@@ -6,10 +6,12 @@ from validation_functions.validation import name_validation, phone_validation
 @name_validation
 @phone_validation
 @input_error
-def add_contact(name: str, phone_number: str, book: AddressBook) -> str:
+def add_contact(args, book):
+    """Додає контакт до адресної книги."""
+    name, phone_number = args[0], args[1] 
+
     name = name.strip()
 
-    
     record = book.find_record(name)
     if record is not None:
         try:
