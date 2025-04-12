@@ -135,10 +135,10 @@ Incorrect data will result in an error message.
 
 "Legacy" Team:
 
-alex-miami-petrov (TL) - [https://github.com/alex-miami-petrov/gemini_3.0](https://github.com/alex-miami-petrov/gemini_3.0)
+alex-miami-petrov (TL) - [https://github.com/alex-miami-petrov/gemini_3.0]
 
-DevDS7 - [https://github.com/DevDS7](https://github.com/DevDS7)
+DevDS7 - [https://github.com/DevDS7]
 
-Mshukaliuk - [https://github.com/Mshukaliuk](https://github.com/Mshukaliuk)
+Mshukaliuk - [https://github.com/Mshukaliuk]
 
-Git-V1 - [https://github.com/Git-V1](https://github.com/Git-V1)
+Git-V1 - [https://github.com/Git-V1]
