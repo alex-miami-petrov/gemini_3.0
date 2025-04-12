@@ -1,27 +1,21 @@
 from bot_functions import *
 from parse import parse_input
-from address_book import AddressBook  #додали імпорт класу AddressBook
+from address_book import AddressBook  
 from validation_functions.validation import name_validation, phone_validation, input_error
-from file_func import save_data, load_data  #додали імпорт функцій для роботи з файлами
-from rich_func import show_commands  #додали імпорт функції для роботи з rich
+from file_func import save_data, load_data 
+from rich_func import show_commands  
 
 def main():
     book = load_data()
     if not book:
-        book = AddressBook() #якщо адресна книга пуста, створюємо нову
+        book = AddressBook() 
     
 
-    show_commands() #виводимо команди за допомогою rich
+    show_commands() 
 
-    # print("Welcome to the assistant bot!")
-    # print("You can use the following commands:")
-    # print("add, change-phone, show-phons, all,\nadd-birthday, show-birthday, birthdays, all-birthdays, add-email, show-email, change-email,\nadd-note, show-note, change-note, remove-note, hello, close, exit.")
 
     while True:
         user_input = input("Enter a command: ").strip()
-        # KeyboardInterrupt = "close" or "exit"
-        # if user_input == er:
-        #     break
         if not user_input:
             print("Error: Please enter a command.")
             continue
@@ -49,12 +43,12 @@ def main():
             else:
                 name = args[0]
                 phone = args[1]
-                print(add_contact(name, phone, book)) #передаємо book замість contacts
+                print(add_contact(name, phone, book)) 
         elif command == "change-phone":
             if len(args) < 2:
                 print("Error: Please provide both name and phone number.")
             else:
-                print(change_phone(args, book))  #передаємо book замість contacts
+                print(change_phone(args, book))  
         elif command == "show-contact":
             if not args:
                 print("Error: Please provide a name to find the contact.")
@@ -69,44 +63,44 @@ def main():
             if not args:
                 print("Error: Please provide a name to find the phone number.")
             else:
-                print(show_phone(args[0], book))  #передаємо book замість contacts
+                print(show_phone(args[0], book))  
         elif command == "all":
-            print(show_all(book))  #передаємо book замість contacts
+            print(show_all(book))  
         elif command == "add-address":
-            if len(args) < 4:  #перевірка, чи є всі необхідні параметри (ім'я та адреса)
+            if len(args) < 4:  
                 print("Error: Please provide both name and full address (city, street, house).")
             else:
-                print(add_address(args, book))  #передаємо book замість contacts
+                print(add_address(args, book))  
         elif command == "show-address":
-            if not args:  # Якщо немає аргументів (ім'я не вказано)
+            if not args:  
                 print("Error: Please provide a name to find the address.")
             else:
                 print(show_address(args[0], book))
 
         elif command == "change-address":
-            if len(args) < 4:  # Перевірка на достатню кількість аргументів для зміни адреси
+            if len(args) < 4:  
                 print("Error: Please provide name, city, street, and house.")
             else:
-                print(change_address(args, book))  #передаємо book замість contacts
+                print(change_address(args, book))  
         elif command == "add-birthday":
             if len(args) < 2:
                 print("Error: Please provide both name and birthday.")
             else:
-                print(add_birthday(args, book)) #передаємо book замість contacts
+                print(add_birthday(args, book)) 
         elif command == "show-birthday":
             if not args:
                 print("Error: Please provide a name to find the birthday.")
             else:
-                print(show_birthday(args[0], book)) #передаємо book замість contacts
+                print(show_birthday(args[0], book)) 
         elif command == "birthdays":
-            print(birthdays(book)) #передаємо book замість contacts
+            print(birthdays(book)) 
         elif command == "all-birthdays":
             if len(args) < 1:
                 print("Error: Please provide the number of days.")
             else:
                 try:
                     number_of_days = int(args[0])
-                    result = book.birthdays_pack(number_of_days)  # book — це AddressBook
+                    result = book.birthdays_pack(number_of_days)  
                     if not result:
                         print("No birthdays found.")
                     else:
@@ -167,6 +161,3 @@ def main():
 if __name__ == "__main__":
     main()
 
- #perevirka
- #perevirka 2
- #perevirka 3
