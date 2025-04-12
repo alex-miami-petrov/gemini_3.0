@@ -40,17 +40,17 @@ class Email(Field):
         return self.email
 class Address(Field):
     """Клас для зберігання адреси"""
-    def __init__(self, city: str, street: str, house: str, address: str = None):
+    def __init__(self, address: str = None):
         #неправильна частина була тут, тому потрібно без переписування параметрів
         if not isinstance(address, str): # we are checking if notes is a string
             raise ValueError("Add something to address.")
-        self.city = city
-        self.street = street
-        self.house = house
-        self.address = address #зберігаємо адресу
+        # self.city = city
+        # self.street = street
+        # self.house = house
+        self.address = address
 
     def __str__(self):
-        return f"{self.city}, {self.street}, {self.house}"
+        return f"{self.address}"
 
 # class Contact:
 #     def __init__(self, name: str):
@@ -133,10 +133,11 @@ class BookForNotes(UserDict):
     def __str__(self):
         return self.show_notes()
 
-def __str__(self):
-    if not self.data:
-        return "No notes"
-    return "\n".join(str(note) for note in self.data.values())
+    def __str__(self):
+        if not self.data:
+            return "No notes"
+        return "\n".join(str(note) for note in self.data.values())
+
 class Birthday(Field):
     """Клас для зберігання дати народження"""
     def __init__(self, birthday):
@@ -167,7 +168,7 @@ class Record:
         self.emails = []
         self.birthday = birthday if birthday else None
         self.notes = notes if isinstance(notes, BookForNotes) else BookForNotes() #ініціалізуємо нотатки, якщо вони є
-        self.address = address if address else None  #ініціалізуємо адресу, якщо вона є
+        self.address = None  #ініціалізуємо адресу, якщо вона є
 
     def add_phone(self, phone):
         """Додає номер телефону до запису"""
@@ -220,9 +221,9 @@ class Record:
                 return str(e)
         return "Email not found"
     
-    def add_address(self, city: str, street: str, house: str):
+    def add_address(self, address: str):
         """Додає адресу до запису"""
-        self.address = Address(city, street, house) #додаємо адресу
+        self.address = Address(address) #додаємо адресу
 
     # def change_address(self, city: str, street: str, house: str):
     #     """Змінює адресу контакту"""
@@ -256,10 +257,10 @@ class Record:
 
         if self.notes and self.notes.data:
             notes_list = [str(note) for note in self.notes.data.values()]
-            notes_str = "\n    - " + "\n    - ".join(notes_list)
+            notes_str = "\n" + "\n    - ".join(notes_list)
         else:
             notes_str = "No notes for this user"
-        return f"Contact name: {self.name}, phones: {phones_str}, address:, emails: {emails_str}, birthday: {birthday_str}, notes: {notes_str}"
+        return f"Contact name: {self.name}, phones: {phones_str}, address: {self.address}, emails: {emails_str}, birthday: {birthday_str}, notes: {notes_str}"
 
 class AddressBook(UserDict):
     """Клас для збереження контактів"""

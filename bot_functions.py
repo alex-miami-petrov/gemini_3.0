@@ -8,14 +8,11 @@ from validation_functions.validation import name_validation, phone_validation
 @phone_validation
 @input_error
 def add_contact(name: str, phone_number: str, book: AddressBook) -> str:
-    #очищаємо пробіли в імені, якщо потрібно
     name = name.strip()
 
     #шукаємо запис в книзі контактів
     record = book.find_record(name)
-
     if record is not None:
-        #якщо контакт вже є, додаємо новий номер телефону
         try:
             record.add_phone(phone_number)
             return f"Phone number {phone_number} added to {name}."
@@ -31,7 +28,6 @@ def add_contact(name: str, phone_number: str, book: AddressBook) -> str:
         except ValueError as e:
             return f"Error: {str(e)}"
 
-########################### PHONE ##################################
 
 @input_error
 def change_phone(args, book):
@@ -76,7 +72,6 @@ def show_phone(name: str, book: AddressBook) -> str:
     else:
         return f"Contact with name {name.capitalize()} not found."
 
-########################### SHOW ALL ##################################
 
 @input_error
 def show_all(book):
@@ -162,8 +157,7 @@ def show_email(name, book):
             return f"Emails for {name}: {emails}"
         else:
             return f"No email found for {name}."
-    else:
-        return f"Contact with name {name} not found."
+    return f"Contact with name {name} not found."
 
 @input_error
 def change_email(args, book):
@@ -204,8 +198,6 @@ def remove_record(name, book):
         return f"Contact {name} removed."
 
 
-########################### NOTES ##################################
-  
 @input_error
 def show_note(name, book):
     record = book.find_record(name)
@@ -230,7 +222,8 @@ def show_note(name, book):
     tags = ", ".join(sorted(all_tags)) if all_tags else "No tags"
     
     #повертаємо більш читабельний формат
-    return f"Notes for {name}: {notes} | Tags: {tags}"
+    return f"Notes for {name}:\n{notes}\nTags: {tags}"
+
 
 @input_error
 def add_note(args, book):
@@ -331,27 +324,6 @@ def add_tag(name, tag, book):
         return f"Tag '{tag}' added to note: {last_note.notes}"
     except Exception as e:
         return f"Failed to add tag: {e}"
-    
-
-########################### ADDRESS ##################################
-
-# @input_error
-# def add_address(command: str, book: AddressBook):
-#     parts = command.strip().split(" ", 4)
-    
-#     #перевірка на правильну кількість частин в команді
-#     if len(parts) == 5:
-#         _, name, city, street, house = parts  #розпаковка частин команди
-#         record = book.find_record(name)  #шукаємо контакт в книзі
-        
-#         #якщо контакт знайдений, додаємо адресу
-#         if record:
-#             record.add_address()
-#             print(f"Address for {name} has been added: {city}, {street}, {house}")
-#         else:
-#             print(f"No contact found with name {name}.")  #якщо контакт не знайдений
-#     else:
-#         print("Invalid command. Usage: add_address <name> <city> <street> <house>")
 
 
 @input_error
@@ -360,14 +332,17 @@ def add_address(args, book) -> str:
     if len(args) < 4:
         return "Error: Not enough arguments for adding address. Format: add-address <name> <city> <street> <house>"
 
-    name, city, street, house = args[0], args[1], args[2], args[3]
-    record = book.find_record(name)  #шукаємо контакт в книзі
+    # name, city, street, house = args[0], args[1], args[2], args[3]
+    
+    name = args[0]
+    address = ", ".join(args[1:])  # об'єднуємо частини адреси в один рядок
+    print(f"Address: {address}")  # для перевірки
 
     record = book.find_record(name)
     if not record:
         return f"Contact '{name}' not found."
     
-    record.add_address(city, street, house)
+    record.add_address(address)
     return f"Address for '{name}' added successfully."                                    
 
 @input_error
