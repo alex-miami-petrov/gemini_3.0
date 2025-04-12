@@ -1,12 +1,26 @@
-# Your Personal Assistant - Address Book
+# 🤖 Your Personal Assistant - Address Book
 
-Your reliable assistant for managing contacts, addresses, birthdays, emails, and notes. Find the information you need quickly, add new contacts, and edit existing ones easily!
+Your reliable assistant for managing contacts, addresses, birthdays, emails, and notes. Quickly find information, add new entries, and edit existing ones!
+
+---
+
+## ✨ Features
+
+- **Contacts:** Add, edit, view, and remove contacts with phone numbers, addresses, emails, and birthdays.
+- **Notes:** Save notes with tags for easy organization.
+- **Data Management:** Change and view data by name.
+- **Interactive Interface:** Enjoy interactive command hints during input.
+- **Data Persistence:** Save data to `addressbook.pkl` file.
+- **Birthday Reminders:** Search for upcoming birthdays.
+
+---
 
 ### 1. Installation
 
 If you are using Git, clone the repository:
 
 `git clone https://github.com/alex-miami-petrov/gemini_3.0.git`
+
 `cd gemini_3.0`
 
 Install the necessary libraries:
@@ -21,95 +35,65 @@ You will see a list of available commands.
 
 ### 3. How to Use the Bot
 
-Commands:
+## ️ Commands
 
-## hello: Greeting.
+### General Commands
 
-## add <name> <phone number>: Add a contact.
+- `hello` — Greeting
+- `all` — View all contacts
+- `close` / `exit` — Exit the bot
 
-Example: `add John +380501234567`
+### Contact Commands
 
-## change-phone <name> <new_phone_number>: Change a contact's phone number.
+- `add <name> <phone number>`
+  - Example: `add John +380501234567`
+- `change-phone <name> <new_phone>`
+  - Example: `change-phone John +380679876543`
+- `show-contact <name>` — Show full information
+- `show-phones <name>` — Show phone numbers
+- `remove <name>` — Remove contact
 
-Example: `change-phone John +380679876543`
+### Address Commands
 
-## show-contact <name>: View contact information.
+- `add-address <name> <city>, <street>, <house>`
+  - Example: `add-address John Kyiv, Khreshchatyk, 1`
+- `change-address <name> <city>, <street>, <house>`
+  - Example: `change-address John Lviv, Sichovykh Striltsiv, 5`
+- `show-address <name>` — Show address
 
-Example: `show-contact John`
+### Birthday Commands
 
-## remove <name>: Remove a contact.
+- `add-birthday <name> <YYYY-MM-DD>`
+  - Example: `add-birthday John 1990-05-15`
+- `show-birthday <name>` — Show birthday
+- `birthdays` — Show upcoming birthdays
+- `all-birthdays <days>` — Show birthdays for the specified period
+  - Example: `all-birthdays 7`
 
-Example: `remove John`
+### Email Commands
 
-## show-phones <name>: View contact's phone numbers.
+- `add-email <name> <email>`
+  - Example: `add-email John john@example.com`
+- `show-email <name>` — Show email
+- `change-email <name> <new_email>`
+  - Example: `change-email John new_john@example.com`
 
-Example: `show-phones John`
+### Note Commands
 
-## all: View all contacts.
+- `add-note <name> <title> <note_text>`
+  - Example: `add-note John Meeting Discuss project details.`
+- `show-note <name>` — Show all notes
+- `change-note <name> <title> <new_note_text>`
+  - Example: `change-note John Meeting Update agenda.`
+- `remove-note <name> <title>` — Remove note
 
-## add-address <name> <city>, <street>, <house>: Add an address.
-
-Example: `add-address John Kyiv, Khreshchatyk, 1`
-
-## show-address <name>: View contact's address.
-
-Example: `show-address John`
-
-## change-address <name> <city>, <street>, <house>: Change an address.
-
-Example: `change-address John Lviv, Sichovykh Striltsiv, 5`
-
-## add-birthday <name> <year-month-day>: Add a birthday.
-
-Example: `add-birthday John 1990-05-15`
-
-## show-birthday <name>: View contact's birthday.
-
-Example: `show-birthday John`
-
-## birthdays: View upcoming birthdays.
-
-## all-birthdays <number_of_days>: View birthdays within a period.
-
-Example: `all-birthdays 7`
-
-## add-email <name> <email>: Add an email.
-
-Example: `add-email John john@example.com`
-
-## show-email <name>: View contact's email.
-
-Example: `show-email John`
-
-## change-email <name> <new_email>: Change an email.
-
-Example: `change-email John new_john@example.com`
-
-## add-note <name> <title> <note_text>: Add a note.
-
-Example: `add-note John Meeting notes Discuss project details.`
-
-## show-note <name>: View contact's note.
-
-Example: `show-note John`
-
-## change-note <name> <title> <new_note_text>: Change a note.
-
-Example: `change-note John Meeting notes Discuss new project details.`
-
-## remove-note <name> <title>: Remove a note.
-
-Example: `remove-note John Meeting notes`
-
-## close or exit: Exit the bot.
+**Note:** After adding a note, the bot will ask if you want to add tags — press `y` and enter tags separated by commas.
 
 ### Additional Information
 
 Data is stored in `addressbook.pkl`.
 
-Use `Tab` for command autocompletion and arrow keys for command history.
-
-For note tags, enter `y` after adding a note, then enter tags separated by commas.
+To select a command from the list, press `↑ / ↓`, then `→` to autocomplete.
 
 ### Data Validation
 
@@ -122,8 +106,6 @@ Email: Contains `@`.
 Birthday: `YYYY-MM-DD`.
 
 Address: "City, Street, House".
-
-Notes: Any text, tags separated by commas.
 
 Incorrect data will result in an error message.
 
@@ -138,3 +120,5 @@ DevDS7 - [https://github.com/DevDS7]
 Mshukaliuk - [https://github.com/Mshukaliuk]
 
 Git-V1 - [https://github.com/Git-V1]
+
+##### Enjoy your personal assistant! 🎉
