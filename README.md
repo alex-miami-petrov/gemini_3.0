@@ -2,8 +2,6 @@
 
 Your reliable assistant for managing contacts, addresses, birthdays, emails, and notes. Find the information you need quickly, add new contacts, and edit existing ones easily!
 
-## Getting Started
-
 ### 1. Installation
 
 If you are using Git, clone the repository:
@@ -16,8 +14,6 @@ Install the necessary libraries:
 `pip install prompt-toolkit rich urllib3`
 
 ### 2. Run the Bot
-
-Run the bot:
 
 `python main.py`
 
