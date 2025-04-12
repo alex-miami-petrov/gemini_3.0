@@ -66,6 +66,7 @@ class Address(Field):
 #         return str(self.address) if self.address else "No address"
     
 class Notes(Field):
+
     """Клас для зберігання notes"""
     def __init__(self, title, notes, tag = None):
         if not isinstance(notes, str): # we are checking if notes is a string
@@ -74,6 +75,7 @@ class Notes(Field):
         self.title = title or "Untitled"
         self.notes = notes #зберігаємо notes
         self.tag = set(tag) if tag else set()
+
 
     def add_tag(self, tag):
         if not isinstance(tag, str): 
@@ -89,7 +91,17 @@ class Notes(Field):
             return "No tags"
         return ", ".join(tag for tag in self.tag)
     
+    def remove_tag(self, tag):
+        self.tags.discard(tag.lower()) #delete
+
+    def change_tag(self, old_tag, new_tag):
+        old, new = old_tag.lower(), new_tag.lower()
+        if old in self.tags:
+            self.tags.remove(old)
+            self.tags.add(new) #change 
+    
     def __str__(self):
+
         # tags_str = ", ".join(self.tag) if self.tag else "No tags"
         # return f"Title: {self.title} | Note: {self.notes} | Tags: {tags_str}"
         parts = []
@@ -100,7 +112,7 @@ class Notes(Field):
         if self.tag:
             parts.append("Tags: " + ", ".join(sorted(self.tag)))
         return "\n".join(parts) if parts else "Empty Note"
-    
+
 class BookForNotes(UserDict):
     """Клас для зберігання нотаток"""
     def __init__(self):
@@ -116,6 +128,7 @@ class BookForNotes(UserDict):
     def find_note(self, note_id):
         return self.data.get(note_id, None)
 
+
     def edit_note(self, title, new_note_text):
         """Редагує текст нотатки за її заголовком, залишаючи заголовок незмінним."""
         for note in self.data.values():
@@ -123,6 +136,7 @@ class BookForNotes(UserDict):
                 note.notes = new_note_text  #оновлюємо текст нотатки
                 return True  #якщо нотатку знайдено і текст змінено
         return False  #якщо нотатку не знайдено
+
     
     def show_notes(self):
         """Повертає всі нотатки у форматі рядка"""
@@ -133,10 +147,12 @@ class BookForNotes(UserDict):
     def __str__(self):
         return self.show_notes()
 
+
     def __str__(self):
         if not self.data:
             return "No notes"
         return "\n".join(str(note) for note in self.data.values())
+
 
 class Birthday(Field):
     """Клас для зберігання дати народження"""
