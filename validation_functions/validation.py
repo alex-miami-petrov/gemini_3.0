@@ -44,7 +44,6 @@ def input_error(func):
     """Декоратор для обробки помилок вводу."""
     def inner(*args, **kwargs):
         try:
-            #перевірка для окремих функцій, наприклад, додавання контакту
             if func.__name__ in ['add_contact', 'change_contact']:
                 name, phone = args[0], args[1]
                 if not validate_name(name):
@@ -57,9 +56,7 @@ def input_error(func):
                 return "Error: Something went wrong, no data returned."
             return result
         except AttributeError as e:
-            #спеціальна обробка для помилки, коли атрибут відсутній
             return f"AttributeError: {str(e)}. It seems that the 'address' attribute is missing in the Record object."
         except Exception as e:
-            #загальна обробка всіх інших помилок
             return f"Unexpected error: {str(e)}"
     return inner
