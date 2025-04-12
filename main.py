@@ -4,17 +4,12 @@ from address_book import AddressBook
 from validation_functions.validation import name_validation, phone_validation, input_error
 from file_func import save_data, load_data
 from rich_func import show_commands
-from guess_command import get_completer
+from guess_command import *
 
 from prompt_toolkit import prompt
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
-commands_list = [
-    "add", "change-phone", "remove", "add-birthday", "add-email",
-    "change-email", "add-note", "change-note", "remove-note", "add-address",
-    "change-address", "show-contact", "show-phones", "all", "show-address",
-    "show-birthday", "birthdays", "all-birthdays", "hello", "close", "exit", "show-note"
-]
+
 
 def handle_hello(args, book):
     print("How can I help you?")
