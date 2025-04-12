@@ -1,12 +1,12 @@
 import re
 
 def normalize_phone(phone):
-    pattern = r"[\\n\\t()/;,\-:!\s\.]+" #створюємо шаблон не потрібних символів в номерах
-    number = re.sub(pattern, "", phone) #видаляємо не потрібні символи
+    pattern = r"[\\n\\t()/;,\-:!\s\.]+" 
+    number = re.sub(pattern, "", phone) 
     
-    if re.match(r"^\+38", number): #шукаємо +38 на початку
+    if re.match(r"^\+38", number): 
         return number  
-    elif re.match(r"^38", number): #шукаємо 38 і додаємо + на початку
+    elif re.match(r"^38", number): 
         return "+" + number  
     else:
-        return "+38" + number #в усіх інших випадках додаємо +38
+        return "+38" + number 
