@@ -19,7 +19,7 @@ Your reliable assistant for managing contacts, addresses, birthdays, emails, and
 
 If you are using Git, clone the repository:
 
-`git clone https://github.com/alex-miami-petrov/gemini_3.0.git`
+`git clone https://github.com/alex-miami-petrov/legacy.git`
 
 `cd gemini_3.0`
 
@@ -113,7 +113,7 @@ Incorrect data will result in an error message.
 
 "Legacy" Team:
 
-alex-miami-petrov (TL) - [https://github.com/alex-miami-petrov/gemini_3.0]
+alex-miami-petrov (TL) - [https://github.com/alex-miami-petrov/legacy]
 
 DevDS7 - [https://github.com/DevDS7]
 
