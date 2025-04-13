@@ -1,4 +1,4 @@
-# 🤖 Your Personal Assistant - Address Book
+# 🤖 Your Personal Assistant - LEGACY BOT 1.0
 
 Your reliable assistant for managing contacts, addresses, birthdays, emails, and notes. Quickly find information, add new entries, and edit existing ones!
 
