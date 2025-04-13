@@ -42,6 +42,7 @@ You will see a list of available commands.
 - `hello` — Greeting
 - `all` — View all contacts
 - `close` / `exit` — Exit the bot
+- `help` - Show commands
 
 ### Contact Commands
 
