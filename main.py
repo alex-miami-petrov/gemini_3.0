@@ -114,16 +114,45 @@ def handle_change_email(args, book):
     else:
         print(change_email(args, book))
 
+# def handle_add_note(args, book):
+#     print(add_note(args, book))
+#     response = input("Do you want to add some tags? y/n ").strip().lower()
+#     if response == "y":
+#         tags = input("Enter tags separated by commas: ").strip().split(",")
+#         for tag in tags:
+#             add_tag(args[0], tag.strip(), book)
+#         print("Tags added.")
+#     else:
+#         print("No tags added.")
+
 def handle_add_note(args, book):
-    print(add_note(args, book))
-    response = input("Do you want to add some tags? y/n ").strip().lower()
-    if response == "y":
-        tags = input("Enter tags separated by commas: ").strip().split(",")
-        for tag in tags:
-            add_tag(args[0], tag.strip(), book)
-        print("Tags added.")
-    else:
-        print("No tags added.")
+    while True:
+        if len(args) < 3:
+            print("Error: Please provide name, title and note.")
+            try_again = input("Do you want to try again? y/n ").strip().lower()
+            if try_again == "y":
+                new_command = input("Enter a command: ").strip()
+                parts = new_command.split()
+                if parts and parts[0] == "add-note":
+                    args = parts[1:]
+                    continue
+                else:
+                    print("Invalid command. Returning to main menu.")
+                    return
+            else:
+                print("Aborting note addition.")
+                return
+        else:
+            print(add_note(args, book))
+            response = input("Do you want to add some tags? y/n ").strip().lower()
+            if response == "y":
+                tags = input("Enter tags separated by commas: ").strip().split(",")
+                for tag in tags:
+                    add_tag(args[0], tag.strip(), book)
+                print("Tags added.")
+            else:
+                print("No tags added.")
+            return
 
 def handle_show_note(args, book):
     if not args:

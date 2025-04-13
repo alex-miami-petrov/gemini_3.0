@@ -71,11 +71,48 @@ def show_phone(name: str, book: AddressBook) -> str:
         return f"Contact with name {name.capitalize()} not found."
 
 
+# @input_error
+# def show_all(book):
+#     if not book.data:
+#         return "No contacts found."
+#     return "\n".join(str(record) for record in book.data.values())
+
 @input_error
 def show_all(book):
     if not book.data:
         return "No contacts found."
-    return "\n".join(str(record) for record in book.data.values())
+
+    console = Console()
+    table = Table(show_header=True, header_style="bold magenta", show_lines=True)
+    table.add_column("Name", style="dim")
+    table.add_column("Phones")
+    table.add_column("Address")
+    table.add_column("Emails")
+    table.add_column("Birthday")
+    table.add_column("Notes", width=20, overflow="fold")
+
+    for record in book.data.values():
+        name = str(record.name)
+
+        phones = "\n".join(str(p) for p in record.phones) if record.phones else "-"
+        address = str(record.address) if record.address else "-"
+        emails = "\n".join(str(e) for e in record.emails) if record.emails else "-"
+        birthday = str(record.birthday) if record.birthday else "-"
+
+        if record.notes and record.notes.data:
+            notes = "\n".join(
+                f"Title: {note.title}\nText: {note.notes}\nTags: {', '.join(note.tag)}"
+                for note in record.notes.data.values()
+            )
+        else:
+            notes = "-"
+
+        table.add_row(name, phones, address, emails, birthday, notes)
+
+    console.print(table)
+
+    return ""
+
 
 
 @input_error
