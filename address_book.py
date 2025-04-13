@@ -75,11 +75,11 @@ class Notes(Field):
         return ", ".join(tag for tag in self.tag)
     
     def remove_tag(self, tag):
-        self.tags.discard(tag.lower())
+        self.tag.discard(tag.lower())
 
     def change_tag(self, old_tag, new_tag):
         old, new = old_tag.lower(), new_tag.lower()
-        if old in self.tags:
+        if old in self.tag:
             self.tags.remove(old)
             self.tags.add(new)
     
@@ -124,14 +124,14 @@ class BookForNotes(UserDict):
             return "No notes available."
         return "; ".join(str(note) for note in self.data.values())
     
-    def __str__(self):
-        return self.show_notes()
+    # def __str__(self):
+    #     return self.show_notes()
 
 
-    def __str__(self):
-        if not self.data:
-            return "No notes"
-        return "\n".join(str(note) for note in self.data.values())
+    # def __str__(self):
+    #     if not self.data:
+    #         return "No notes"
+    #     return "\n".join(str(note) for note in self.data.values())
 
 
 class Birthday(Field):
@@ -250,7 +250,6 @@ class Record:
         emails_str = "; ".join(str(e) for e in self.emails) if self.emails else "No emails"
         birthday_str = str(self.birthday) if self.birthday else "No birthday"
         
-
         if self.notes and self.notes.data:
             notes_list = [str(note) for note in self.notes.data.values()]
             notes_str = "\n" + "\n    - ".join(notes_list)

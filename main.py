@@ -14,6 +14,9 @@ from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 def handle_hello(args, book):
     print("How can I help you?")
 
+def handle_help(args, book):
+    return show_commands()
+
 def handle_add(args, book):
     if len(args) < 2:
         print("Error: Please provide both name and phone number.")
@@ -114,16 +117,6 @@ def handle_change_email(args, book):
     else:
         print(change_email(args, book))
 
-# def handle_add_note(args, book):
-#     print(add_note(args, book))
-#     response = input("Do you want to add some tags? y/n ").strip().lower()
-#     if response == "y":
-#         tags = input("Enter tags separated by commas: ").strip().split(",")
-#         for tag in tags:
-#             add_tag(args[0], tag.strip(), book)
-#         print("Tags added.")
-#     else:
-#         print("No tags added.")
 
 def handle_add_note(args, book):
     while True:
@@ -172,6 +165,7 @@ def handle_remove_note(args, book):
     else:
         print(remove_note(args[0], args[1], book))
 
+
 def main():
     book = load_data()
     if not book:
@@ -203,6 +197,7 @@ def main():
         "show-note": handle_show_note,
         "change-note": handle_change_note,
         "remove-note": handle_remove_note,
+        "help": handle_help,
     }
 
     try:
