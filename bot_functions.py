@@ -2,6 +2,9 @@ from address_book import Record, AddressBook, Notes, BookForNotes
 from validation_functions.validation import input_error
 from validation_functions.validation import name_validation, phone_validation
 
+from rich.console import Console
+from rich.table import Table
+
 
 @name_validation
 @phone_validation
