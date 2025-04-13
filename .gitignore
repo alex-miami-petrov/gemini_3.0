@@ -3,4 +3,3 @@ requirements.txt
 addressbook.pkl
 
 __pycache__/
-*.pyc
