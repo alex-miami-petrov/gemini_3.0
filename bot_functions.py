@@ -330,16 +330,17 @@ def show_address(name: str, book) -> str:
     else:
         return f"No contact found with name {name}."
 
-@input_error   
+@input_error
 def change_address(args, book: AddressBook) -> str:
-    if len(args) < 5:
-        return "Error: Please provide name, city, street, and house."
-    
-    name, city, street, house = args[0], args[1], args[2], args[3]
+    if len(args) < 4:
+        return "Error: Please provide name and full address (city, street, house)."
+
+    name = args[0]
+    address = ", ".join(args[1:])
     record = book.find_record(name)
-    
+
     if record:
-        record.change_address(city, street, house)
-        return f"Address for {name} changed to: {city}, {street}, {house}"
+        record.change_address(address)
+        return f"Address for {name} changed to: {address}"
     else:
         return f"No contact found with name {name}."
