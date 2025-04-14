@@ -233,16 +233,9 @@ def show_note(name, book):
     if not isinstance(record.notes, BookForNotes) or not record.notes.data:
         return f"Error: No valid notes found for {name}."
     
-    notes = record.notes.show_notes().replace("[", "").replace("]", "")  
-    
-    all_tags = set()
-    for note in record.notes.data.values():
-        if isinstance(note, Notes):
-            all_tags.update(note.tag)
-    
-    tags = ", ".join(sorted(all_tags)) if all_tags else "No tags"
-    
-    return f"Notes for {name}:\n{notes}\nTags: {tags}"
+    notes = record.notes.show_notes()  
+
+    return f"Notes for {name}:\n{notes}"
 
 
 @input_error
@@ -270,6 +263,8 @@ def add_note(args, book):
         return f"Note added to {name}:\n{note}"
     except ValueError as e:
         return str(e)
+    except Exception as e:
+        return f"❌ Error while adding note: {e}"
     
 @input_error
 def remove_note(name, title, book):
