@@ -114,16 +114,6 @@ def handle_change_email(args, book):
     else:
         print(change_email(args, book))
 
-# def handle_add_note(args, book):
-#     print(add_note(args, book))
-#     response = input("Do you want to add some tags? y/n ").strip().lower()
-#     if response == "y":
-#         tags = input("Enter tags separated by commas: ").strip().split(",")
-#         for tag in tags:
-#             add_tag(args[0], tag.strip(), book)
-#         print("Tags added.")
-#     else:
-#         print("No tags added.")
 
 def handle_add_note(args, book):
     while True:

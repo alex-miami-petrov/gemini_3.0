@@ -74,12 +74,6 @@ def show_phone(name: str, book: AddressBook) -> str:
         return f"Contact with name {name.capitalize()} not found."
 
 
-# @input_error
-# def show_all(book):
-#     if not book.data:
-#         return "No contacts found."
-#     return "\n".join(str(record) for record in book.data.values())
-
 @input_error
 def show_all(book):
     if not book.data:
